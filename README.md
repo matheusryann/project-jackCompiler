@@ -1,7 +1,8 @@
 # project-jackCompiler
 
-## Integrante
+## Integrantes
 - Matheus Ryan Carreiro Costa Correia
+- João Gabriel de Oliveira Lopes
 
 ## Linguagem de Programação
 - Java
