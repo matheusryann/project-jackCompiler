@@ -18,7 +18,20 @@ O scanner é responsável por:
 - Implementar um scanner funcional em Java
 - Seguir as regras léxicas da linguagem Jack
 - Gerar saída compatível com os arquivos oficiais (`*T.xml`)
-- Aplicar desenvolvimento incremental (TDD)
+- Aplicar **TDD simplificado** (ciclo descrito na secção seguinte)
+
+---
+
+## Desenvolvimento guiado por testes (TDD simplificado)
+
+A partir de agora, o fluxo de trabalho segue:
+
+1. **Escrever um teste** para uma funcionalidade pequena.
+2. **Implementar o código** mínimo para passar no teste.
+3. **Refatorar** se necessário (ex.: corrigir bugs de espaços em branco).
+4. **Avançar** para o próximo token.
+
+Isso se chama **Desenvolvimento Guiado por Testes (TDD)** simplificado.
 
 ---
 
@@ -135,13 +148,18 @@ Responsável por:
 - Scanner básico
 - Reconhecimento de: números, identificadores, keywords, símbolos
 
-### Fase 2 — Intermediário
+### Fase 2 — Validação
+
+- Geração de XML
+- Escape de caracteres: `<`, `>`, `&`, `"`
+- Comparação com arquivos oficiais
+
+### Fase 3 — Intermediário
 
 - Strings (`"texto"`)
 - Comentários: linha (`//`) e bloco (`/* */`)
 - Tratamento de erros léxicos
 
-### Fase 3 — Validação
 
 - Geração de XML
 - Escape de caracteres: `<`, `>`, `&`, `"`
@@ -152,17 +170,6 @@ Responsável por:
 - Testes automatizados (JUnit)
 - Refatoração do código
 - Melhorias de performance
-
----
-
-## Estratégia de testes
-
-Abordagem incremental:
-
-1. Implementar uma funcionalidade pequena
-2. Testar
-3. Ajustar
-4. Avançar
 
 ---
 
