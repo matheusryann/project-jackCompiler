@@ -1,7 +1,5 @@
 package jackcompiler;
 
-
-
 public class Token {
     private TokenType type;
     private String lexeme;
@@ -60,7 +58,7 @@ public class Token {
 
         if (type == TokenType.EOF) {
 
-            throw new IllegalStateException("toXml() não se aplica a EOF")
+            throw new IllegalStateException("toXml() não se aplica a EOF");
         }
 
         if (type.name().startsWith("KEYWORD_")) {
