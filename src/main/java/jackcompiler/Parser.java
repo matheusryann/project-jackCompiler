@@ -68,6 +68,28 @@ public class Parser {
         closeTag("term");
     }
 
+    /**
+     * expression → term (op term)*
+     * No XML do Project 10, cada {@code op} é um {@code symbol} (+ - * / &amp; | &lt; &gt; =).
+     */
+    private void compileExpression() {
+        openTag("expression");
+        compileTerm();
+        while (peek() != null && isBinaryOp(peek().getType())) {
+            writeToken(peek());
+            advance();
+            compileTerm();
+        }
+        closeTag("expression");
+    }
+
+    private static boolean isBinaryOp(TokenType type) {
+        return switch (type) {
+            case PLUS, MINUS, STAR, SLASH, AND, PIPE, LT, GT, EQ -> true;
+            default -> false;
+        };
+    }
+
     private void compileClass() {
         openTag("class");
         match(TokenType.KEYWORD_CLASS);
