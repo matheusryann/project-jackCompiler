@@ -107,7 +107,7 @@ src/test/java/jackcompiler/parser/ParserTest.java
 ```
 
 ---
-## Próximas etapas (disciplina)
+## Próximas etapas
 
 - Completar o parser para todo o programa Jack e comparar com os `.xml` oficiais.  
 - Geração de código VM (Project 11).  
