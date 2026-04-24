@@ -14,7 +14,12 @@ Este repositório contém o **compilador da linguagem Jack** do curso [Nand2Tetr
 
 ## O que o programa faz (visão rápida)
 
-Hoje, ao executar a aplicação principal (`Main`), o projeto **tokeniza** um arquivo `.jack` e grava um XML de tokens (`*T.generated.xml`) compatível com o formato do Nand2Tetris. O **parser** já existe em parte (testes cobrem expressões e uma classe mínima); a árvore sintática completa e o backend da VM vêm nas próximas entregas.
+O objetivo do projeto é implementar, de forma incremental, componentes fundamentais de um compilador para a linguagem Jack, em conformidade com os **Projects 10 e 11** do material oficial do Nand2Tetris.
+
+No estado atual, o projeto já realiza:
+
+- **análise léxica**, com geração de XML de tokens;
+- **análise sintática**, com geração de XML da árvore sintática.
 
 ---
 
@@ -37,7 +42,7 @@ Hoje, ao executar a aplicação principal (`Main`), o projeto **tokeniza** um ar
 mvn compile
 ```
 
-**3.** Rodar o **tokenizer** (gera o XML de tokens ao lado do `.jack`). Depois de `mvn compile`, podes usar **uma** destas formas.
+**3.** Rodar o **tokenizer** (gera o XML de tokens ao lado do `.jack`). Depois de `mvn compile`, pode usar **uma** destas formas.
 
 **Com Maven (invoca a `Main` com o classpath certo):** no **PowerShell**, o `-Dexec.args=...` tem de ir **inteiro entre aspas duplas**, senão o comando pode ser cortado ao meio:
 
