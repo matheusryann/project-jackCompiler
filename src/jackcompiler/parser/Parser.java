@@ -21,9 +21,6 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    /**
-     * Gera o XML do programa.
-     */
     public String parse() {
         xmlLines.clear();
         current = 0;
@@ -32,9 +29,6 @@ public class Parser {
         return getXml();
     }
 
-    /**
-     * Interpreta um único termo e devolve o XML (útil em testes e até integrar em {@code expression}).
-     */
     public String parseTerm() {
         xmlLines.clear();
         current = 0;
@@ -43,9 +37,6 @@ public class Parser {
         return getXml();
     }
 
-    /**
-     * Interpreta uma expressão completa e devolve o XML (útil em testes).
-     */
     public String parseExpression() {
         xmlLines.clear();
         current = 0;
@@ -187,11 +178,116 @@ public class Parser {
 
     /**
      * statements → statement*
-     * Por enquanto deixa vazio; os statements específicos entram no próximo commit.
      */
     private void compileStatements() {
         openTag("statements");
+
+        while (peek() != null && isStatementStart(peek().getType())) {
+            switch (peek().getType()) {
+                case KEYWORD_LET -> compileLet();
+                case KEYWORD_IF -> compileIf();
+                case KEYWORD_WHILE -> compileWhile();
+                case KEYWORD_DO -> compileDo();
+                case KEYWORD_RETURN -> compileReturn();
+                default -> throw new IllegalStateException(
+                        "Statement inesperado: " + peek().getLexeme() + " (linha " + peek().getLine() + ")");
+            }
+        }
+
         closeTag("statements");
+    }
+
+    /**
+     * letStatement → 'let' varName ('[' expression ']')? '=' expression ';'
+     */
+    private void compileLet() {
+        openTag("letStatement");
+
+        match(TokenType.KEYWORD_LET);
+        match(TokenType.IDENTIFIER);
+
+        if (peek() != null && peek().getType() == TokenType.LBRACKET) {
+            match(TokenType.LBRACKET);
+            compileExpression();
+            match(TokenType.RBRACKET);
+        }
+
+        match(TokenType.EQ);
+        compileExpression();
+        match(TokenType.SEMICOLON);
+
+        closeTag("letStatement");
+    }
+
+    /**
+     * ifStatement → 'if' '(' expression ')' '{' statements '}'
+     *               ('else' '{' statements '}')?
+     */
+    private void compileIf() {
+        openTag("ifStatement");
+
+        match(TokenType.KEYWORD_IF);
+        match(TokenType.LPAREN);
+        compileExpression();
+        match(TokenType.RPAREN);
+        match(TokenType.LBRACE);
+        compileStatements();
+        match(TokenType.RBRACE);
+
+        if (peek() != null && peek().getType() == TokenType.KEYWORD_ELSE) {
+            match(TokenType.KEYWORD_ELSE);
+            match(TokenType.LBRACE);
+            compileStatements();
+            match(TokenType.RBRACE);
+        }
+
+        closeTag("ifStatement");
+    }
+
+    /**
+     * whileStatement → 'while' '(' expression ')' '{' statements '}'
+     */
+    private void compileWhile() {
+        openTag("whileStatement");
+
+        match(TokenType.KEYWORD_WHILE);
+        match(TokenType.LPAREN);
+        compileExpression();
+        match(TokenType.RPAREN);
+        match(TokenType.LBRACE);
+        compileStatements();
+        match(TokenType.RBRACE);
+
+        closeTag("whileStatement");
+    }
+
+    /**
+     * doStatement → 'do' subroutineCall ';'
+     */
+    private void compileDo() {
+        openTag("doStatement");
+
+        match(TokenType.KEYWORD_DO);
+        compileSubroutineCall();
+        match(TokenType.SEMICOLON);
+
+        closeTag("doStatement");
+    }
+
+    /**
+     * returnStatement → 'return' expression? ';'
+     */
+    private void compileReturn() {
+        openTag("returnStatement");
+
+        match(TokenType.KEYWORD_RETURN);
+
+        if (peek() != null && peek().getType() != TokenType.SEMICOLON) {
+            compileExpression();
+        }
+
+        match(TokenType.SEMICOLON);
+        closeTag("returnStatement");
     }
 
     /**
@@ -326,6 +422,14 @@ public class Parser {
                 || type == TokenType.KEYWORD_CHAR
                 || type == TokenType.KEYWORD_BOOLEAN
                 || type == TokenType.IDENTIFIER;
+    }
+
+    private static boolean isStatementStart(TokenType type) {
+        return type == TokenType.KEYWORD_LET
+                || type == TokenType.KEYWORD_IF
+                || type == TokenType.KEYWORD_WHILE
+                || type == TokenType.KEYWORD_DO
+                || type == TokenType.KEYWORD_RETURN;
     }
 
     private Token peek() {
