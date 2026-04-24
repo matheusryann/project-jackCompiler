@@ -22,7 +22,7 @@ public class Parser {
     }
 
     /**
-     * Gera o XML do programa (por agora: uma única classe vazia {@code class Name { }}).
+     * Gera o XML do programa.
      */
     public String parse() {
         xmlLines.clear();
@@ -52,6 +52,120 @@ public class Parser {
         indentLevel = 0;
         compileExpression();
         return getXml();
+    }
+
+    /**
+     * class → 'class' className '{' classVarDec* subroutineDec* '}'
+     */
+    private void compileClass() {
+        openTag("class");
+        match(TokenType.KEYWORD_CLASS);
+        match(TokenType.IDENTIFIER);
+        match(TokenType.LBRACE);
+
+        while (peek() != null && isClassVarDecStart(peek().getType())) {
+            compileClassVarDec();
+        }
+
+        while (peek() != null && isSubroutineDecStart(peek().getType())) {
+            compileSubroutineDec();
+        }
+
+        match(TokenType.RBRACE);
+        match(TokenType.EOF);
+        closeTag("class");
+    }
+
+    /**
+     * classVarDec → ('static' | 'field') type varName (',' varName)* ';'
+     */
+    private void compileClassVarDec() {
+        openTag("classVarDec");
+
+        if (peek() != null && peek().getType() == TokenType.KEYWORD_STATIC) {
+            match(TokenType.KEYWORD_STATIC);
+        } else {
+            match(TokenType.KEYWORD_FIELD);
+        }
+
+        compileType();
+        match(TokenType.IDENTIFIER);
+
+        while (peek() != null && peek().getType() == TokenType.COMMA) {
+            match(TokenType.COMMA);
+            match(TokenType.IDENTIFIER);
+        }
+
+        match(TokenType.SEMICOLON);
+        closeTag("classVarDec");
+    }
+
+    /**
+     * subroutineDec → ('constructor' | 'function' | 'method')
+     *                 ('void' | type) subroutineName '(' parameterList ')' subroutineBody
+     */
+    private void compileSubroutineDec() {
+        openTag("subroutineDec");
+
+        if (peek() != null && peek().getType() == TokenType.KEYWORD_CONSTRUCTOR) {
+            match(TokenType.KEYWORD_CONSTRUCTOR);
+        } else if (peek() != null && peek().getType() == TokenType.KEYWORD_FUNCTION) {
+            match(TokenType.KEYWORD_FUNCTION);
+        } else {
+            match(TokenType.KEYWORD_METHOD);
+        }
+
+        if (peek() != null && peek().getType() == TokenType.KEYWORD_VOID) {
+            match(TokenType.KEYWORD_VOID);
+        } else {
+            compileType();
+        }
+
+        match(TokenType.IDENTIFIER);
+        match(TokenType.LPAREN);
+        compileParameterList();
+        match(TokenType.RPAREN);
+
+        closeTag("subroutineDec");
+    }
+
+    /**
+     * parameterList → ((type varName) (',' type varName)*)?
+     */
+    private void compileParameterList() {
+        openTag("parameterList");
+
+        if (peek() != null && isTypeStart(peek().getType())) {
+            compileType();
+            match(TokenType.IDENTIFIER);
+
+            while (peek() != null && peek().getType() == TokenType.COMMA) {
+                match(TokenType.COMMA);
+                compileType();
+                match(TokenType.IDENTIFIER);
+            }
+        }
+
+        closeTag("parameterList");
+    }
+
+    /**
+     * type → 'int' | 'char' | 'boolean' | className
+     */
+    private void compileType() {
+        Token t = peek();
+        if (t == null) {
+            throw new IllegalStateException("Tipo esperado, encontrado EOF");
+        }
+
+        switch (t.getType()) {
+            case KEYWORD_INT -> match(TokenType.KEYWORD_INT);
+            case KEYWORD_CHAR -> match(TokenType.KEYWORD_CHAR);
+            case KEYWORD_BOOLEAN -> match(TokenType.KEYWORD_BOOLEAN);
+            case IDENTIFIER -> match(TokenType.IDENTIFIER);
+            default -> throw new IllegalStateException(
+                    "Tipo esperado, encontrado: " + t.getLexeme() + " (linha " + t.getLine() + ")");
+        }
     }
 
     /**
@@ -152,15 +266,21 @@ public class Parser {
         };
     }
 
-    private void compileClass() {
-        openTag("class");
-        match(TokenType.KEYWORD_CLASS);
-        match(TokenType.IDENTIFIER);
-        match(TokenType.LBRACE);
-        // classVarDec* e subroutineDec* — incrementos futuros
-        match(TokenType.RBRACE);
-        match(TokenType.EOF);
-        closeTag("class");
+    private static boolean isClassVarDecStart(TokenType type) {
+        return type == TokenType.KEYWORD_STATIC || type == TokenType.KEYWORD_FIELD;
+    }
+
+    private static boolean isSubroutineDecStart(TokenType type) {
+        return type == TokenType.KEYWORD_CONSTRUCTOR
+                || type == TokenType.KEYWORD_FUNCTION
+                || type == TokenType.KEYWORD_METHOD;
+    }
+
+    private static boolean isTypeStart(TokenType type) {
+        return type == TokenType.KEYWORD_INT
+                || type == TokenType.KEYWORD_CHAR
+                || type == TokenType.KEYWORD_BOOLEAN
+                || type == TokenType.IDENTIFIER;
     }
 
     private Token peek() {
