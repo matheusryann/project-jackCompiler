@@ -125,6 +125,7 @@ public class Parser {
         match(TokenType.LPAREN);
         compileParameterList();
         match(TokenType.RPAREN);
+        compileSubroutineBody();
 
         closeTag("subroutineDec");
     }
@@ -147,6 +148,50 @@ public class Parser {
         }
 
         closeTag("parameterList");
+    }
+
+    /**
+     * subroutineBody → '{' varDec* statements '}'
+     */
+    private void compileSubroutineBody() {
+        openTag("subroutineBody");
+        match(TokenType.LBRACE);
+
+        while (peek() != null && peek().getType() == TokenType.KEYWORD_VAR) {
+            compileVarDec();
+        }
+
+        compileStatements();
+
+        match(TokenType.RBRACE);
+        closeTag("subroutineBody");
+    }
+
+    /**
+     * varDec → 'var' type varName (',' varName)* ';'
+     */
+    private void compileVarDec() {
+        openTag("varDec");
+        match(TokenType.KEYWORD_VAR);
+        compileType();
+        match(TokenType.IDENTIFIER);
+
+        while (peek() != null && peek().getType() == TokenType.COMMA) {
+            match(TokenType.COMMA);
+            match(TokenType.IDENTIFIER);
+        }
+
+        match(TokenType.SEMICOLON);
+        closeTag("varDec");
+    }
+
+    /**
+     * statements → statement*
+     * Por enquanto deixa vazio; os statements específicos entram no próximo commit.
+     */
+    private void compileStatements() {
+        openTag("statements");
+        closeTag("statements");
     }
 
     /**
