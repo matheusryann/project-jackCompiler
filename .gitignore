@@ -5,3 +5,5 @@ out/
 *.class
 *.generated.xml
 actual_output.xml
+target/
+*.class
