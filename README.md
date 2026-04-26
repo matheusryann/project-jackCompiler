@@ -48,7 +48,7 @@ A análise sintática depende da análise léxica, pois o parser não processa d
 ## Organização do código
 
 ```text
-src/jackcompiler/
+src/
 ├── Main.java
 ├── ParserMain.java
 ├── io/
@@ -60,7 +60,7 @@ src/jackcompiler/
 └── parser/
     └── Parser.java
 
- tests/jackcompiler/parser/
+ tests/parser/
  └── ParserTest.java
 ```
 

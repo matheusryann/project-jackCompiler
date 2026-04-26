@@ -1,8 +1,6 @@
-package jackcompiler;
-
-import jackcompiler.lexer.Scanner;
-import jackcompiler.lexer.Token;
-import jackcompiler.parser.Parser;
+import lexer.Scanner;
+import lexer.Token;
+import parser.Parser;
 
 import java.io.IOException;
 import java.nio.file.Files;

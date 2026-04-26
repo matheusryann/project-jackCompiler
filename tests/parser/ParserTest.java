@@ -1,8 +1,8 @@
-package jackcompiler.parser;
+package parser;
 
-import jackcompiler.lexer.Scanner;
-import jackcompiler.lexer.Token;
-import jackcompiler.lexer.TokenType;
+import lexer.Scanner;
+import lexer.Token;
+import lexer.TokenType;
 
 import org.junit.jupiter.api.Test;
 

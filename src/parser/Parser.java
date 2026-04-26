@@ -1,7 +1,7 @@
-package jackcompiler.parser;
+package parser;
 
-import jackcompiler.lexer.Token;
-import jackcompiler.lexer.TokenType;
+import lexer.Token;
+import lexer.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;

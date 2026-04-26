@@ -1,4 +1,4 @@
-package jackcompiler.lexer;
+package lexer;
 
 /**
  * Tipos de tokens da linguagem Jack (Nand2Tetris).

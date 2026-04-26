@@ -1,4 +1,4 @@
-package jackcompiler.lexer;
+package lexer;
 
 public class Token {
     private TokenType type;
