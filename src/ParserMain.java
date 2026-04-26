@@ -10,8 +10,8 @@ import java.util.List;
 public class ParserMain {
     public static void main(String[] args) {
         if (args.length != 1) {
-            System.err.println("Uso: java -cp target/classes jackcompiler.ParserMain <arquivo.jack>");
-            System.err.println("   ou: mvn -q exec:java -Dexec.mainClass=jackcompiler.ParserMain -Dexec.args=<arquivo.jack>");
+            System.err.println("Uso: java -cp target/classes ParserMain <arquivo.jack>");
+            System.err.println("   ou: mvn -q exec:java -Dexec.mainClass=ParserMain -Dexec.args=<arquivo.jack>");
             System.exit(1);
         }
 
