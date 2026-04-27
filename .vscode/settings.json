@@ -3,5 +3,6 @@
     "src",
     "tests"
   ],
-  "java.project.outputPath": "out"
+  "java.project.outputPath": "out",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }
